@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gerador Pedido</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <h1> Gerar Pedido </h1>
+<form onsubmit="return false;">
+    <label for="texto">Digite aqui Produto/Valor:</label>
+    <input type="text" id="texto" name="texto"> <input type="button" value="Enviar" onclick="adicionarOpcao()"><br><br>
+
+    <label for="select1">Produto :</label>
+    <select id="select1" name="select1">
+    </select>
+
+    <button type="button" onclick="excluirOpcao()">Excluir</button> <button type="button"
+        id="btnEditar" onclick="editarOpcao();">Editar</button><br><br>
+
+    <label for="select2">Valor :</label>
+    <select id="select2" name="select2">
+    </select> <button type="button" onclick="excluirOpcao2()">Excluir</button> <button onclick="editarOpcao2()" id="btnEditar2">Editar</button><br><br>
+    <button type="button" onclick="gerarCampoTexto()">Gerar Pedido</button>
+    <br><br>
+    <textarea placeholder="Aqui mostrará o seu pedido de acordo com as option selecionadas" id="campoTexto" rows="4" cols="50"></textarea> <button id="limpar" type="button">Limpar</button>
+</form>
+<script>
+    var numClicados = 0;
+    var opcoesSelect1 = [];
+    var opcoesSelect2 = [];
+    var btnEditar = document.getElementById("btnEditar");
+
+    function adicionarOpcao() {
+        numClicados++;
+        var texto = document.getElementById("texto").value;
+        if (numClicados % 2 == 1) {
+            // Adiciona nova opção ao select1
+            var novaOpcao = document.createElement("option");
+            novaOpcao.value = texto;
+            novaOpcao.text = texto;
+            document.getElementById("select1").add(novaOpcao);
+            opcoesSelect1.push(texto);
+        } else {
+            // Adiciona nova opção ao select2
+            var novaOpcao = document.createElement("option");
+            novaOpcao.value = texto;
+            novaOpcao.text = texto;
+            document.getElementById("select2").add(novaOpcao);
+            opcoesSelect2.push(texto);
+        }
+    }
+
+    function excluirOpcao() {
+        var select1 = document.getElementById("select1");
+        var indiceSelecionado = select1.selectedIndex;
+        if (indiceSelecionado != -1) {
+            // Remove a opção do select1
+            select1.remove(indiceSelecionado);
+            opcoesSelect1.splice(indiceSelecionado, 1);
+
+            // Remove a opção correspondente do select2
+            var select2 = document.getElementById("select2");
+            select2.remove(indiceSelecionado);
+            opcoesSelect2.splice(indiceSelecionado, 1);
+        }
+    }
+    function excluirOpcao2() {
+            var select2 = document.getElementById("select2");
+            var indiceSelecionado = select2.selectedIndex;
+            if (indiceSelecionado != -1) {
+                // Remove a opção do select2
+                select2.remove(indiceSelecionado);
+                opcoesSelect2.splice(indiceSelecionado, 1);
+
+                // Remove a opção correspondente do select1
+                var select1 = document.getElementById("select1");
+                select1.remove(indiceSelecionado);
+                opcoesSelect1.splice(indiceSelecionado, 1);
+            }
+        }
+    function editarOpcao() {
+            var select1 = document.getElementById("select1");
+            var indiceSelecionado = select1.selectedIndex;
+            if (indiceSelecionado != -1) {
+                var texto = select1.options[indiceSelecionado].text;
+                var novoTexto = prompt("Deseja editar a opção selecionada?\n\nDigite o novo valor:", texto);
+                if (novoTexto != null && novoTexto !== "") {
+                    select1.options[indiceSelecionado].text = novoTexto;
+                    select1.options[indiceSelecionado].value = novoTexto;
+                }
+            }
+        }
+        function editarOpcao2() {
+                var select2 = document.getElementById("select2");
+                var indiceSelecionado = select2.selectedIndex;
+                if (indiceSelecionado != -1) {
+                    var texto = select2.options[indiceSelecionado].text;
+                    var novoTexto = prompt("Deseja editar a opção selecionada?\n\nDigite o novo valor:", texto);
+                    if (novoTexto != null && novoTexto !== "") {
+                        select2.options[indiceSelecionado].text = novoTexto;
+                        select2.options[indiceSelecionado].value = novoTexto;
+                    }
+                }
+            }
+
+
+        
+        function gerarCampoTexto() {
+                var opcoesSelecionadas1 = [];
+                var opcoesSelecionadas2 = [];
+
+                // Obtém todas as opções selecionadas no select1
+                var select1 = document.getElementById("select1");
+                for (var i = 0; i < select1.options.length; i++) {
+                    if (select1.options[i].selected) {
+                        opcoesSelecionadas1.push(select1.options[i].value);
+                    }
+                }
+
+                // Obtém todas as opções selecionadas no select2
+                var select2 = document.getElementById("select2");
+                for (var i = 0; i < select2.options.length; i++) {
+                    if (select2.options[i].selected) {
+                        opcoesSelecionadas2.push(select2.options[i].value);
+                    }
+                }
+
+                var texto = "Seu Pedido:\n\n Produto: " + opcoesSelecionadas1 + "\n Valor: R$ " + opcoesSelecionadas2;
+
+                // Exibe o texto no campo de texto
+                var campoTexto = document.getElementById("campoTexto");
+                campoTexto.value = texto;
+            }
+
+
+    document.getElementById("select1").addEventListener("change", function () {
+        var indice = this.selectedIndex;
+        document.getElementById("select2").selectedIndex = indice;
+    });
+
+    document.getElementById("select2").addEventListener("change", function () {
+        var indice = this.selectedIndex;
+        document.getElementById("select1").selectedIndex = indice;
+    });
+    document.getElementById('limpar').addEventListener('click', function () {
+            document.getElementById('campoTexto').value = '';
+        });
+</script>
+
+</body>
+
+</html>
